@@ -1,7 +1,7 @@
 import math
 import sys
 
-# sys.stdin = open("inputs/d_metropolis.in", 'r')
+sys.stdin = open("inputs/d_metropolis.in", 'r')
 
 def dist(a, b, x, y):
     return math.fabs(a-x) + math.fabs(b-y)
@@ -28,7 +28,7 @@ vehicles = []
 
 # Put code here
 
-rides.sort(key=lambda r: r['s'])
+rides.sort(key=finish)
 
 for i in range(F):
     if not rides:
@@ -37,15 +37,24 @@ for i in range(F):
     r = rides.pop(0)
     vehicles.append([r['i']])
 
-    pos = [r['x'], r['y']]
+    pos_start = [r['a'], r['b']]
+    pos_end = [r['x'], r['y']]
     lastest = r['f']
+    earliest = r['s']
     while lastest < T:
         find = False
         for r2 in rides:
-            if lastest + dist(pos[0], pos[1], r2['a'], r2['b']) < r2['s']:
+            if lastest + dist(pos_end[0], pos_end[1], r2['a'], r2['b']) < r2['s']:
                 vehicles[i].append(r2['i'])
                 lastest = r2['f']
-                pos = [r2['x'], r2['y']]
+                pos_end = [r2['x'], r2['y']]
+                rides.remove(r2)
+                find = True
+                break
+            if r2['f'] + dist(pos_start[0], pos_start[1], r2['x'], r2['y']) < earliest:
+                vehicles[i].insert(0, r2['i'])
+                earliest = r2['s']
+                pos_start = [r2['a'], r2['b']]
                 rides.remove(r2)
                 find = True
                 break
