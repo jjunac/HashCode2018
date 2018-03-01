@@ -9,4 +9,4 @@ HashCode 2018 repository for the BoubouTeam
 
 ## Score
 
-For our first participation, we did `38 218 195` points and finished XXXXth out of XXXXXX.
+For our first participation, we did `38 218 195` points and finished 1335th out of 4856.
