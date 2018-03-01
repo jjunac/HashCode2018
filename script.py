@@ -1,7 +1,7 @@
 import math
 import sys
 
-#sys.stdin = open("inputs/d_metropolis.in", 'r')
+#sys.stdin = open("inputs/e_high_bonus.in", 'r')
 
 def dist(a, b, x, y):
     return math.fabs(a-x) + math.fabs(b-y)
@@ -24,60 +24,57 @@ for l in [input() for _ in range(N)]:
     rides.append({'a': a[0], 'b': a[1], 'x': a[2], 'y': a[3], 's': a[4], 'f': a[5], 'i': i})
     i += 1
 
-vehicles = []
+vehicles = [{"rides": [], "lastest": 0, "pos": [0, 0]} for _ in range(F)]
 
 # Put code here
 
-rides.sort(key=start)
+rides.sort(key=lambda r: start(r) + dist(0,0, r['a'], r['b']))
 
 find = False
 
-def no_bonus():
-    global r2, lastest, pos_end, find
-    for r2 in rides:
-        if lastest + dist(pos_end[0], pos_end[1], r2['a'], r2['b']) + dist(r2['a'], r2['b'], r2['x'], r2['y']) < r2[
-            'f']:
-            vehicles[i].append(r2['i'])
-            lastest = r2['f']
-            pos_end = [r2['x'], r2['y']]
-            rides.remove(r2)
-            find = True
-            break
+for r in rides:
+    possible = []
+    if B == 1000:
+        possible = [v for v in vehicles if v["lastest"] + dist(r["a"], r["b"], v["pos"][0], v["pos"][1]) <= r["s"]]
+        if not possible:
+            possible = [v for v in vehicles if
+                        v["lastest"] + dist(r["a"], r["b"], v["pos"][0], v["pos"][1]) + dist_ride(r) <= r["f"]]
 
+    else:
+        possible = [v for v in vehicles if v["lastest"] + dist(r["a"], r["b"], v["pos"][0], v["pos"][1]) + dist_ride(r) <= r["f"]]
 
-def bonus():
-    global r2, lastest, pos_end, find
-    for r2 in rides:
-        if lastest + dist(pos_end[0], pos_end[1], r2['a'], r2['b']) < r2['s']:
-            vehicles[i].append(r2['i'])
-            lastest = r2['f']
-            pos_end = [r2['x'], r2['y']]
-            rides.remove(r2)
-            find = True
-            break
-
-
-for i in range(F):
-    if not rides:
-        vehicles.append([])
+    if not possible:
         continue
-    r = rides.pop(0)
-    vehicles.append([r['i']])
+    v = min(possible, key=lambda v: v["lastest"])
+    v["rides"].append(r["i"])
+    v["lastest"] = r["f"]
+    v["pos"] = [r["x"], r["y"]]
 
-    pos_start = [r['a'], r['b']]
-    pos_end = [r['x'], r['y']]
-    lastest = r['f']
-    earliest = r['s']
-    while lastest < T:
-        find = False
-        if B == 1000:
-            bonus()
-            if not find:
-                no_bonus()
-        else:
-            no_bonus()
+
+
+
+for v in vehicles: print(str(len(v["rides"])) + " " + " ".join(map(str, v["rides"])))
+
+"""if not rides:
+    vehicles.append([])
+    continue
+r = rides.pop(0)
+vehicles.append([r['i']])
+
+pos_start = [r['a'], r['b']]
+pos_end = [r['x'], r['y']]
+lastest = r['f']
+earliest = r['s']
+while lastest < T:
+    find = False
+    if B == 1000:
+        bonus()
         if not find:
-            break
+            no_bonus()
+    else:
+        no_bonus()
+    if not find:
+        break"""
 
 
-for v in vehicles: print(str(len(v)) + " " + " ".join(map(str, v)))
+#for v in vehicles: print(str(len(v)) + " " + " ".join(map(str, v)))
