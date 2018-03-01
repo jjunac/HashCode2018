@@ -1,7 +1,7 @@
 import math
 import sys
 
-#sys.stdin = open("inputs/a_example.in", 'r')
+# sys.stdin = open("inputs/a_example.in", 'r')
 
 def dist(a, b, x, y):
     return math.fabs(a-x) + math.fabs(b-y)
@@ -20,11 +20,29 @@ for l in [input() for _ in range(N)]:
 
 vehicles = []
 
+# Put code here
+
 rides.sort(key=lambda r: dist_ride(r))
 
-i = 0
 for i in range(F):
-    r = rides[i]
-    vehicles.append("1 " + str(r['i']))
+    if not rides:
+        break
+    r = rides.pop(0)
+    vehicles.append([r['i']])
 
-for v in vehicles: print(v)
+    pos = [r['x'], r['y']]
+    lastest = r['f']
+    while lastest < T:
+        find = False
+        for r2 in rides:
+            if lastest + dist(pos[0], pos[1], r2['a'], r2['b']) < r2['s']:
+                vehicles[i].append(r2['i'])
+                lastest = r2['f']
+                pos = [r2['x'], r2['y']]
+                rides.remove(r2)
+                find = True
+                break
+        if not find:
+            break
+
+for v in vehicles: print(str(len(v)) + " " + " ".join(map(str, v)))
