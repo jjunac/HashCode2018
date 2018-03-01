@@ -3,7 +3,7 @@ import subprocess
 import os
 path = os.path
 
-SCRIPT = "empty.py"
+SCRIPT = "script.py"
 OUTPUT = "outputs"
 
 if not path.exists(OUTPUT):
