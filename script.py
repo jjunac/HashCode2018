@@ -1,13 +1,19 @@
 import math
 import sys
 
-# sys.stdin = open("inputs/a_example.in", 'r')
+# sys.stdin = open("inputs/d_metropolis.in", 'r')
 
 def dist(a, b, x, y):
     return math.fabs(a-x) + math.fabs(b-y)
 
 def dist_ride(r):
     return dist(r['a'], r['b'], r['x'], r['y'])
+
+def finish(r):
+    return r['f']
+
+def start(r):
+    return r['s']
 
 (R, C, F, N, B, T) = tuple(map(int, input().split()))
 rides = []
@@ -22,11 +28,12 @@ vehicles = []
 
 # Put code here
 
-rides.sort(key=lambda r: dist_ride(r))
+rides.sort(key=lambda r: r['s'])
 
 for i in range(F):
     if not rides:
-        break
+        vehicles.append([])
+        continue
     r = rides.pop(0)
     vehicles.append([r['i']])
 
