@@ -12,6 +12,7 @@ if not path.exists(OUTPUT):
 for f in glob.glob("inputs/*.in"):
     fin = open(f, 'r')
     fout = open(path.join(OUTPUT, path.basename(f).replace(".in", ".out")), 'w')
+    print(path.basename(f))
     p = subprocess.Popen(["py", "-3", SCRIPT], stdin=fin, stdout=fout, shell=True)
     p.wait()
     fout.close()

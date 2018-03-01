@@ -1,7 +1,7 @@
 import math
 import sys
 
-sys.stdin = open("inputs/d_metropolis.in", 'r')
+#sys.stdin = open("inputs/b_should_be_easy.in", 'r')
 
 def dist(a, b, x, y):
     return math.fabs(a-x) + math.fabs(b-y)
@@ -28,10 +28,36 @@ vehicles = []
 
 # Put code here
 
-rides.sort(key=finish)
+#rides.sort(key=finish)
 
 for i in range(F):
+
     if not rides:
+        vehicles.append([])
+        continue
+
+    pos = [0, 0]
+    lastest = 0
+
+    res = []
+
+    while lastest < T:
+        possible = [r for r in rides if lastest + dist(pos[0], pos[1], r['a'], r['b']) < r['s'] and 3 * dist(pos[0], pos[1], r['a'], r['b']) < r['s'] - lastest]
+        if not possible:
+            possible = [r for r in rides if lastest + dist(pos[0], pos[1], r['a'], r['b']) < r['s']]
+        if not possible:
+            break
+
+        r = min(possible, key=lambda r: dist(pos[0], pos[1], r['a'], r['b']))
+
+        lastest = r['f']
+        pos_end = [r['x'], r['y']]
+        res.append(r['i'])
+        rides.remove(r)
+
+    vehicles.append(res)
+
+    """if not rides:
         vehicles.append([])
         continue
     r = rides.pop(0)
@@ -51,14 +77,7 @@ for i in range(F):
                 rides.remove(r2)
                 find = True
                 break
-            if r2['f'] + dist(pos_start[0], pos_start[1], r2['x'], r2['y']) < earliest:
-                vehicles[i].insert(0, r2['i'])
-                earliest = r2['s']
-                pos_start = [r2['a'], r2['b']]
-                rides.remove(r2)
-                find = True
-                break
         if not find:
-            break
+            break"""
 
 for v in vehicles: print(str(len(v)) + " " + " ".join(map(str, v)))
